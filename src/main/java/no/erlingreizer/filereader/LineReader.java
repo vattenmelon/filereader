@@ -52,7 +52,13 @@ public class LineReader {
 			throw new RuntimeException(e);
 		}
 		finally{
-			Closeables.closeQuietly(bfr);
+			if (bfr != null){
+				try {
+					Closeables.close(bfr, true);
+				} catch (IOException e) {
+					//should't happen
+				}
+			}
 		}
 	}
 
