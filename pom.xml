@@ -7,7 +7,6 @@
 	<properties>
 		<!-- jar versions, for dependency management -->
 		<version.junit>4.11</version.junit>
-		<version.guava>15.0</version.guava>
 		<version.maven.clean.plugin>2.5</version.maven.clean.plugin>
 		<version.maven.compiler.plugin>3.1</version.maven.compiler.plugin>
 		<jdk.debug>true</jdk.debug>
@@ -30,12 +29,6 @@
 			<artifactId>junit</artifactId>
 			<version>${version.junit}</version>
 			<classifier>sources</classifier>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>${version.guava}</version>
 		</dependency>
 	</dependencies>
 

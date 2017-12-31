@@ -1,5 +1,6 @@
 package no.erlingreizer.filereader;
 
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,8 +9,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
-import com.google.common.base.Preconditions;
-import com.google.common.io.Closeables;
 
 /***
  * Class that will read line after line from a file. Example of use:
@@ -54,7 +53,7 @@ public class LineReader {
 		finally{
 			if (bfr != null){
 				try {
-					Closeables.close(bfr, true);
+				    bfr.close();
 				} catch (IOException e) {
 					//should't happen
 				}
@@ -69,7 +68,9 @@ public class LineReader {
 	 */
 	public static LineReader withLineHandler(
 			final LineHandler lineHandler) {
-		Preconditions.checkArgument(lineHandler != null, "Linehandler cannot be null");
+	    if (lineHandler == null){
+	        throw new IllegalArgumentException("Linehandler cannot be null");
+        }
 		return new LineReader(lineHandler);
 	}
 
@@ -78,13 +79,17 @@ public class LineReader {
 	 *            The file to parse
 	 */
 	public void parseFile(final String filename) {
-		Preconditions.checkArgument(filename != null, "Filename cannot be null");
+        if (filename == null){
+            throw new IllegalArgumentException("Filename cannot be null");
+        }
 		readFile(filename);
 
 	}
 
 	public LineReader withCharsetEncoding(final Charset charset) {
-		Preconditions.checkArgument(charset != null, "Charset cannot be null");
+        if (charset == null){
+            throw new IllegalArgumentException("Charset cannot be null");
+        }
 		this.charset = charset;
 		return this;
 	}
