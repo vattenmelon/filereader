@@ -35,30 +35,21 @@ public class LineReader {
 	}
 
 	private void readFile(String fileName) {
-		BufferedReader bfr = null;
-		try {
-			bfr = new BufferedReader(new InputStreamReader(
-					new FileInputStream(new File(fileName)), charset));
-			String line;
-			int lineCounter = 1;
-			while ((line = bfr.readLine()) != null) {
-				lineReaderCallback.handleLine(lineCounter, line);
-				lineCounter++;
-			}
-		} catch (FileNotFoundException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		finally{
-			if (bfr != null){
-				try {
-				    bfr.close();
-				} catch (IOException e) {
-					//should't happen
-				}
-			}
-		}
+		try
+            (BufferedReader bfr = new BufferedReader(new InputStreamReader(new FileInputStream(new File(fileName)),
+                    charset))){
+                String line;
+                int lineCounter = 1;
+                while ((line = bfr.readLine()) != null) {
+                    lineReaderCallback.handleLine(lineCounter, line);
+                    lineCounter++;
+                }
+            } catch(FileNotFoundException e){
+                throw new RuntimeException(e);
+            } catch(IOException e){
+                throw new RuntimeException(e);
+            }
+
 	}
 
 	/***
