@@ -5,13 +5,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.Map;
-
-import no.erlingreizer.filereader.LineReader.LineHandler;
 
 import org.junit.Test;
 
-import com.google.common.collect.Maps;
 
 public class LineReaderTest {
 
@@ -25,17 +23,13 @@ public class LineReaderTest {
 	private static final String ISO_8859_1_ENCODING = "ISO-8859-1";
 	private static final String FILE_UTF_8_ENCODED = "src/main/resources/fil.utf8.txt";
 	private static final String FILE_ANSI_ENCODED = "src/main/resources/fil.ansi.txt";
-	final Map<Integer, String> fileContent = Maps.newHashMap();
+	final Map<Integer, String> fileContent = new HashMap<>();
 
 	@Test
-	public void should_parse_three_lines() {
+	public void should_parse_three_lines_Method_reference_way() {
 
-		LineReader.withLineHandler(new LineHandler() {
-			@Override
-			public void handleLine(int lineNumber, String s) {
-				fileContent.put(lineNumber, s);
-			}
-		}).withCharsetEncoding(Charset.availableCharsets().get(UTF_8_ENCODING))
+		LineReader.withLineHandler(fileContent::put)
+				.withCharsetEncoding(Charset.availableCharsets().get(UTF_8_ENCODING))
 				.parseFile(FILE_UTF_8_ENCODED);
 
 		// skrivUtInnhold();
@@ -43,15 +37,40 @@ public class LineReaderTest {
 
 	}
 
+    @Test
+    public void should_parse_three_lines_Lambda_way() {
+
+        LineReader.withLineHandler((int lineNumber, String content) -> fileContent.put(lineNumber, content))
+                .withCharsetEncoding(Charset.availableCharsets().get(UTF_8_ENCODING))
+                .parseFile(FILE_UTF_8_ENCODED);
+
+        // skrivUtInnhold();
+        assertContent();
+
+    }
+
+    @Test
+    public void should_parse_three_lines_Anon_classes_way() {
+
+        LineReader.withLineHandler(new LineHandler() {
+            @Override
+            public void handleLine(int lineNumber, String content) {
+                fileContent.put(lineNumber, content);
+            }
+        })
+                .withCharsetEncoding(Charset.availableCharsets().get(UTF_8_ENCODING))
+                .parseFile(FILE_UTF_8_ENCODED);
+
+        // skrivUtInnhold();
+        assertContent();
+
+    }
+
 	@Test
 	public void should_be_able_to_specify_charset_parse_three_lines() {
 
-		LineReader.withLineHandler(new LineHandler() {
-			@Override
-			public void handleLine(int lineNumber, String s) {
-				fileContent.put(lineNumber, s);
-			}
-		}).withCharsetEncoding(Charset.availableCharsets().get(UTF_8_ENCODING))
+		LineReader.withLineHandler(fileContent::put)
+				.withCharsetEncoding(Charset.availableCharsets().get(UTF_8_ENCODING))
 				.parseFile(FILE_UTF_8_ENCODED);
 
 		// skrivUtInnhold();
@@ -62,22 +81,13 @@ public class LineReaderTest {
 	@Test
 	public void should_be_able_to_specify_charset_parse_three_lines_2() {
 
-		LineReader.withLineHandler(new LineHandler() {
-			@Override
-			public void handleLine(int lineNumber, String s) {
-				fileContent.put(lineNumber, s);
-			}
-		}).withCharsetEncoding(Charset.availableCharsets().get(UTF_8_ENCODING))
+		LineReader.withLineHandler(fileContent::put)
+		.withCharsetEncoding(Charset.availableCharsets().get(UTF_8_ENCODING))
 				.parseFile(FILE_ANSI_ENCODED);
 		assertFalse(LINE_NUMBER_2_CONTENT.equals(fileContent.get(LINE_NUMBER_2)));
 
 		LineReader
-				.withLineHandler(new LineHandler() {
-					@Override
-					public void handleLine(int lineNumber, String s) {
-						fileContent.put(lineNumber, s);
-					}
-				})
+				.withLineHandler(fileContent::put)
 				.withCharsetEncoding(
 						Charset.availableCharsets().get(ISO_8859_1_ENCODING))
 				.parseFile(FILE_ANSI_ENCODED);
@@ -87,12 +97,8 @@ public class LineReaderTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void should_throw_exception_when_specified_charset_is_null() {
 
-		LineReader.withLineHandler(new LineHandler() {
-			@Override
-			public void handleLine(int lineNumber, String s) {
-				fileContent.put(lineNumber, s);
-			}
-		}).withCharsetEncoding(null).parseFile(FILE_UTF_8_ENCODED);
+		LineReader.withLineHandler(fileContent::put)
+				.withCharsetEncoding(null).parseFile(FILE_UTF_8_ENCODED);
 
 		fail("Should never come her!");
 
@@ -100,12 +106,8 @@ public class LineReaderTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void should_throw_IllegalArgumentException_if_filename_is_null() {
-		LineReader.withLineHandler(new LineHandler() {
-			@Override
-			public void handleLine(int lineNumber, String s) {
-				fileContent.put(lineNumber, s);
-			}
-		}).parseFile(null);
+		LineReader.withLineHandler(fileContent::put)
+				.parseFile(null);
 		fail("Should never come her!");
 	}
 
