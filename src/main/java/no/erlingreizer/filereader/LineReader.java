@@ -1,12 +1,7 @@
 package no.erlingreizer.filereader;
 
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.Charset;
 
 
@@ -27,8 +22,8 @@ import java.nio.charset.Charset;
  * 
  */
 public class LineReader {
-	final LineHandler lineReaderCallback;
-	Charset charset = Charset.defaultCharset();
+	private final LineHandler lineReaderCallback;
+	private Charset charset = Charset.defaultCharset();
 
 	private LineReader(final LineHandler lineReaderCallback) {
 		this.lineReaderCallback = lineReaderCallback;
